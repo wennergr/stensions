@@ -1,5 +1,7 @@
 package org.wennergr.util
 
+import org.wennergr.util.MonadExt.{Monad, MonadOps}
+
 import scala.util.Try
 
 /**
@@ -9,6 +11,17 @@ import scala.util.Try
  * TryCons are static factory (constructor) methods
  */
 object TryExt {
+
+  /**
+   * Default implementation of Monad for try
+   */
+  val tryMonad = new Monad[Try] {
+    override def flatMap[A, B](fa: Try[A])(f: A => Try[B]): Try[B] = fa.flatMap(f)
+    override def map[A, B](fa: Try[A])(f: A => B): Try[B] = fa.map(f)
+  }
+
+  // Attach MonadOps functions to Option[Z]
+  implicit def toMonadOps[Z](v: Try[Z]) = new MonadOps[Try,Z](v)(tryMonad)
 
   /**
    * Extensions to the Try class
@@ -26,8 +39,6 @@ object TryExt {
       }
       orig transform(ignoring, ignoring)
     }
-
-
   }
 
   /**

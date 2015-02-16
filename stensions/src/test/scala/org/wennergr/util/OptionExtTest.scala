@@ -22,4 +22,15 @@ class OptionExtTest extends FreeSpec with Matchers {
       f should be(false)
     }
   }
+
+  "The map2 function" - {
+    "should return none if Option[A] or Option[B] is not defined" in {
+      Some("foo").map2(None)(_ + _) should be(None)
+      Option[String](null).map2(Some("foo"))(_ + _) should be(None)
+    }
+
+    "should apply function f if Option[A] and Option[B] is Some" in {
+      Some("foo").map2(Some("bar"))(_ + _) should be(Some("foobar"))
+    }
+  }
 }
