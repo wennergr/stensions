@@ -33,4 +33,29 @@ class OptionExtTest extends FreeSpec with Matchers {
       Some("foo").map2(Some("bar"))(_ + _) should be(Some("foobar"))
     }
   }
+
+  "The fPair function" - {
+    "should create a new cartesian product (a x a)" in {
+      Some("foo").fPair() should be(Some( ("foo", "foo") ))
+    }
+
+    "should return None if input option is none" in {
+      Option[String](null).fPair() should be(None)
+    }
+  }
+
+  "The fAs function" - {
+    "should change a F[A] to a F[B]" in {
+      Some("foo").fAs(12) should be(Some(12))
+      None.fAs("bar") should be(None)
+    }
+  }
+
+  "The fLift function" - {
+    "should lift out the function f: Try[A] => Try[B]" in {
+      val f = Some("oldValue").fLift(_ + "bar")
+      f(Some("foo")) should be(Some("foobar"))
+      f(None) should be(None)
+    }
+  }
 }

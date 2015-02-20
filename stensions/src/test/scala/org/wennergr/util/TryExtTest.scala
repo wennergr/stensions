@@ -61,4 +61,51 @@ class TryExtTest extends FreeSpec with Matchers {
       expr2.map2(expr1)(_ + _) should be(Failure(rt))
     }
   }
+
+  "The fPair function" - {
+    "should create a new cartesian product (a x a)" in {
+
+      val expr1 = Try {
+        val i = 1
+        i+1
+      }
+
+      expr1.fPair() should be( (Success( (2, 2) )) )
+    }
+
+    "should return Failure in case the expression is a failure" - {
+      val expr1 = Try {
+        throw rt;
+      }
+
+      expr1.fPair() should be( (Failure(rt) ) )
+    }
+  }
+
+  "The fLift function" - {
+    "should lift out the function f: Try[A] => Try[B]" in {
+
+      val expr1 = Try {
+        val i = 1;
+        "bar"
+      }
+
+      val f1 = expr1.fLift(_ + "bar")
+
+      f1(Try[String] {
+        "Hello"
+      }) should be(Success("Hellobar"))
+    }
+  }
+
+  "The fAs function" - {
+    "should change a F[A] to a F[B]" in {
+      val expr1 = Try {
+        val i = 1;
+        "bar"
+      }
+
+      expr1.fAs(12) should be(Success(12))
+    }
+  }
 }

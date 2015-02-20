@@ -1,5 +1,6 @@
 package org.wennergr.util
 
+import org.wennergr.util.FunctorExt.Functor
 import org.wennergr.util.MonadExt.{Monad, MonadOps}
 
 import scala.util.Try
@@ -15,7 +16,7 @@ object TryExt {
   /**
    * Default implementation of Monad for try
    */
-  val tryMonad = new Monad[Try] {
+  val tryMonad = new Monad[Try] with Functor[Try] {
     override def flatMap[A, B](fa: Try[A])(f: A => Try[B]): Try[B] = fa.flatMap(f)
     override def map[A, B](fa: Try[A])(f: A => B): Try[B] = fa.map(f)
   }
